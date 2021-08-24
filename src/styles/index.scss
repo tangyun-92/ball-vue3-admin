@@ -2,7 +2,7 @@
  * @Author: 唐云 
  * @Date: 2021-07-27 10:54:41 
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-27 11:30:27
+ * @Last Modified time: 2021-08-24 10:59:33
  */
 @import './variables.scss';
 @import './mixin.scss';
@@ -70,6 +70,7 @@ div:focus {
   .el-form {
     display: flex;
     flex-wrap: wrap;
+    width: 90%;
 
     .el-input__inner {
       width: 220px;

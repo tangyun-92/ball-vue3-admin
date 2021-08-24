@@ -25,6 +25,8 @@ import Sidebar from './components/Sidebar/index.vue'
 import Navbar from './components/Navbar.vue'
 import TagsView from './components/TagsView/index.vue'
 import AppMain from './components/AppMain.vue'
+import useSystemDataHooks from '@/hooks/useSystemDataHooks'
+import { getDict } from '@/api/system/dict'
 
 const route = useRoute()
 const store = useStore()
@@ -41,6 +43,8 @@ const classObj = computed(() => {
   }
 })
 
+const { getDictList } = useSystemDataHooks()
+
 watch(route, () => {
   if (device.value === 'mobile' && opened.value) {
     store.dispatch('app/closeSideBar', { withoutAnimation: false })
@@ -52,6 +56,8 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
+  // 基础字典列表
+  getDictList()
   const isMob = isMobile()
   if (isMob) {
     store.dispatch('app/toggleDevice', 'mobile')

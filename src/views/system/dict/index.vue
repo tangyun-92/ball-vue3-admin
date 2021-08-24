@@ -2,8 +2,8 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-23 16:13:45
- 用户管理
+ * @Last Modified time: 2021-08-24 10:29:52
+ 字典管理
  */
 
 <template>
@@ -192,7 +192,7 @@ export default defineComponent({
       handleCreate,
       handleUpdate,
       selectIds
-    } = useBaseHooks({ reqFn: getDict, searchData, formDataDefault })
+    } = useBaseHooks({ formDataDefault })
 
     // 获取列表
     const getTableList = async () => {

@@ -50,6 +50,21 @@ export const constantRoutes = [
           //   meta: { title: '角色管理', icon: 'el-icon-position' }
           // }
         ]
+      },
+      {
+        path: '/player',
+        component: () => import('@/views/player/index.vue'),
+        name: 'Player',
+        meta: { title: '球员', icon: 'el-icon-position' },
+        redirect: '/player/info',
+        children: [
+          {
+            path: '/player/info',
+            name: 'PlayerInfo',
+            component: () => import('@/views/player/info/index.vue'),
+            meta: { title: '球员信息', icon: 'el-icon-position' }
+          }
+        ]
       }
     ]
   }

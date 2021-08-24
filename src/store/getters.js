@@ -3,43 +3,81 @@ const getters = {
   // 惯用脚
   habitFeet: (state) => {
     const list =
-      (state.baseData.dictList.find((item) => item.code === 'gyj') || {})
-        .children || []
+      (
+        (state.baseData.dictList &&
+          state.baseData.dictList.find((item) => item.code === 'gyj')) ||
+        {}
+      ).children || []
     return list
   },
   // 场上位置
   ballParkPlace: (state) => {
     const list =
-      (state.baseData.dictList.find((item) => item.code === 'wz') || {})
-        .children || []
+      (
+        (state.baseData.dictList &&
+          state.baseData.dictList.find((item) => item.code === 'wz')) ||
+        {}
+      ).children || []
     return list
   },
   // 转会类型
   transferType: (state) => {
     const list =
-      (state.baseData.dictList.find((item) => item.code === 'zhlx') || {})
-        .children || []
+      (
+        (state.baseData.dictList &&
+          state.baseData.dictList.find((item) => item.code === 'zhlx')) ||
+        {}
+      ).children || []
     return list
   },
   // 星级
   starLevel: (state) => {
     const list =
-      (state.baseData.dictList.find((item) => item.code === 'star') || {})
-        .children || []
+      (
+        (state.baseData.dictList &&
+          state.baseData.dictList.find((item) => item.code === 'star')) ||
+        {}
+      ).children || []
     return list
   },
   // 伤病类型
   injuryType: (state) => {
     const list =
-      (state.baseData.dictList.find((item) => item.code === 'sblx') || {})
-        .children || []
+      (
+        (state.baseData.dictList &&
+          state.baseData.dictList.find((item) => item.code === 'sblx')) ||
+        {}
+      ).children || []
     return list
   },
   // 大洲
   continent: (state) => {
     const list =
-      (state.baseData.dictList.find((item) => item.code === 'dz') || {})
-        .children || []
+      (
+        (state.baseData.dictList &&
+          state.baseData.dictList.find((item) => item.code === 'dz')) ||
+        {}
+      ).children || []
+    return list
+  },
+  // 技术特点
+  technicalFeature: (state) => {
+    const list =
+      (
+        (state.baseData.dictList &&
+          state.baseData.dictList.find((item) => item.code === 'jstd')) ||
+        {}
+      ).children || []
+    return list
+  },
+  // 强弱项
+  strongAndWeak: (state) => {
+    const list =
+      (
+        (state.baseData.dictList &&
+          state.baseData.dictList.find((item) => item.code === 'qrx')) ||
+        {}
+      ).children || []
     return list
   }
 }
