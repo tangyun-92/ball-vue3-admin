@@ -53,7 +53,6 @@
 </template>
 
 <script>
-import { ifEnable } from '@/constants/dictionary'
 import { defineComponent, onMounted, reactive, ref } from '@vue/runtime-core'
 import { createOrEditDict } from '@/api/system/dict'
 import { ElMessage } from 'element-plus'
@@ -104,31 +103,27 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      Object.keys(formData).forEach(key => {
+      Object.keys(formData).forEach((key) => {
         formData[key] = props.data[key]
       })
-      // 当修改字典类型时，传0，修改字典属性时，传所属的字典类型代码
-      if (props.type === 'dictType') {
+      // 新增字典类型时
+      if (props.status === 'create' && props.type === 'dictType') {
         formData.parent_code = '0'
-      } else {
+        formData.if_parent = '1'
+      } else if (props.status === 'create' && props.type === 'dictNature') {
+        // 新增字典属性时
         formData.parent_code = props.dictTypeCode
+        formData.if_parent = '0'
       }
     })
 
     // 提交表单
     const submit = () => {
       return new Promise((resolve, resject) => {
-        formRef.value.validate(async valid => {
+        formRef.value.validate(async (valid) => {
           if (valid) {
-            let if_parent
-            if (props.type === 'dictType') {
-              if_parent = '1'
-            } else {
-              if_parent = '0'
-            }
             const res = await createOrEditDict({
-              ...formData,
-              if_parent
+              ...formData
             })
             ElMessage.success(res.message)
             resolve(res)
@@ -141,7 +136,6 @@ export default defineComponent({
 
     return {
       rules,
-      ifEnable,
       submit,
       formData,
       formRef

@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-24 14:42:15
+ * @Last Modified time: 2021-08-24 17:08:32
  球员管理
  */
 
@@ -185,7 +185,7 @@
           </el-table-column>
           <el-table-column prop="contract_expire" label="合同到期" width="90">
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="120">
+          <el-table-column fixed="right" label="操作" width="150">
             <template #default="scope">
               <el-button
                 type="text"
@@ -206,6 +206,11 @@
                   })
                 "
               >删除</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="handleAbility(scope.row)"
+              >能力值</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -256,7 +261,7 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { getPlayer, delPlayer } from '@/api/player/info'
 import { getNation, getTeam } from '@/api/public'
 import useBaseHooks from '@/hooks/useBaseHooks'
@@ -265,115 +270,84 @@ import Form from './components/Form.vue'
 import { whether } from '@/constants/dictionary'
 import { useStore } from 'vuex'
 
-export default defineComponent({
-  name: 'User',
-  components: {
-    Form
-  },
-  setup() {
-    const store = useStore()
-    const formRef = ref(null)
-    // 球队列表
-    const teamList = ref([])
-    // 国家列表
-    const nationList = ref([])
-    // 搜索数据
-    const searchData = reactive({
-      title: '',
-      spu_id: ''
-    })
-    // 默认表单数据
-    const formDataDefault = reactive({
-      name: '',
-      english_name: '',
-      avatar: '',
-      team_id: null,
-      nation_id: null,
-      uniform_number: '',
-      high: '',
-      weight: '',
-      birthday: '',
-      age: '',
-      position: '',
-      feet: '',
-      inverse_enough: null,
-      fancy_tricks: null,
-      international_reputation: null,
-      price: '',
-      contract_expire: '',
-      technical_feature: '',
-      strong_point: '',
-      weak_point: '',
-      id: null
-    })
-    const colors = ref(['#99A9BF', '#F7BA2A', '#FF9900'])
-
-    // 位置
-    const ballParkPlace = computed(() => store.getters.ballParkPlace)
-    // 惯用脚
-    const habitFeet = computed(() => store.getters.habitFeet)
-
-    const {
-      data,
-      handleSizeChange,
-      handleCurrentChange,
-      getTableList,
-      handleCreate,
-      handleUpdate,
-      handleSelectionChange,
-      multipleSelectionHandler,
-      selectIds,
-      filterDict
-    } = useBaseHooks({ reqFn: getPlayer, searchData, formDataDefault })
-
-    onMounted(() => {
-      getTeamList()
-      getNationList()
-    })
-
-    // 获取球队列表
-    const getTeamList = async () => {
-      const res = await getTeam()
-      teamList.value = res.data.records
-    }
-    // 获取国家列表
-    const getNationList = async () => {
-      const res = await getNation()
-      nationList.value = res.data.records
-    }
-
-    // 新增/编辑表单提交
-    const handleSubmit = () => {
-      formRef.value.submit().then(() => {
-        data.formDialogVisible = false
-        getTableList()
-      })
-    }
-
-    return {
-      formRef,
-      data,
-      handleSizeChange,
-      handleCurrentChange,
-      getTableList,
-      handleCreate,
-      handleUpdate,
-      searchData,
-      handleSubmit,
-      handleSelectionChange,
-      delPlayer,
-      multipleSelectionHandler,
-      selectIds,
-      whether,
-      filterDict,
-      teamList,
-      nationList,
-      ballParkPlace,
-      habitFeet,
-      colors
-    }
-  }
+const store = useStore()
+const formRef = ref(null)
+// 球队列表
+const teamList = ref([])
+// 国家列表
+const nationList = ref([])
+// 搜索数据
+const searchData = reactive({
+  title: '',
+  spu_id: ''
 })
+// 默认表单数据
+const formDataDefault = reactive({
+  name: '',
+  english_name: '',
+  avatar: '',
+  team_id: null,
+  nation_id: null,
+  uniform_number: '',
+  high: '',
+  weight: '',
+  birthday: '',
+  age: '',
+  position: '',
+  feet: '',
+  inverse_enough: null,
+  fancy_tricks: null,
+  international_reputation: null,
+  price: '',
+  contract_expire: '',
+  technical_feature: '',
+  strong_point: '',
+  weak_point: '',
+  id: null
+})
+const colors = ref(['#99A9BF', '#F7BA2A', '#FF9900'])
+
+// 位置
+const ballParkPlace = computed(() => store.getters.ballParkPlace)
+// 惯用脚
+const habitFeet = computed(() => store.getters.habitFeet)
+
+const {
+  data,
+  handleSizeChange,
+  handleCurrentChange,
+  getTableList,
+  handleCreate,
+  handleUpdate,
+  handleSelectionChange,
+  multipleSelectionHandler,
+  selectIds,
+  filterDict
+} = useBaseHooks({ reqFn: getPlayer, searchData, formDataDefault })
+
+onMounted(() => {
+  getTeamList()
+  getNationList()
+})
+
+// 获取球队列表
+const getTeamList = async () => {
+  const res = await getTeam()
+  teamList.value = res.data.records
+}
+// 获取国家列表
+const getNationList = async () => {
+  const res = await getNation()
+  nationList.value = res.data.records
+}
+
+// 新增/编辑表单提交
+const handleSubmit = () => {
+  formRef.value.submit().then(() => {
+    data.formDialogVisible = false
+    getTableList()
+  })
+}
 </script>
 
 <style lang="scss">
