@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-08-23 13:29:23
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-25 10:40:35
+ * @Last Modified time: 2021-08-25 11:24:13
  * 球员信息
  */
 import request from '@/utils/request'
@@ -73,13 +73,39 @@ export function getPlayerAbility(data) {
 }
 
 /**
- * 耿勋球员能力值
+ * 更新球员能力值
  * @param {*} data
  * @returns
  */
 export function updatePlayerAbility(data) {
   return request({
     url: '/players/updateAbility',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 获取球员位置
+ * @param {*} data
+ * @returns
+ */
+export function getPlayerPosition(data) {
+  return request({
+    url: '/players/findPosition',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 更新球员位置
+ * @param {*} data
+ * @returns
+ */
+export function updatePlayerPosition(data) {
+  return request({
+    url: '/players/updatePosition',
     method: 'post',
     data
   })

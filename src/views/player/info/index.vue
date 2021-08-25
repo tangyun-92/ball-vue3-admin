@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-25 10:22:32
+ * @Last Modified time: 2021-08-25 13:26:34
  球员管理
  */
 
@@ -185,7 +185,7 @@
           </el-table-column>
           <el-table-column prop="contract_expire" label="合同到期" width="90">
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="150">
+          <el-table-column fixed="right" label="操作" width="180">
             <template #default="scope">
               <el-button
                 type="text"
@@ -211,6 +211,11 @@
                 size="small"
                 @click="handleAbility(scope.row)"
               >能力值</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="handlePosition(scope.row)"
+              >位置</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -233,7 +238,7 @@
       v-if="data.formDialogVisible"
       v-model="data.formDialogVisible"
       :title="data.dialogTitle"
-      width="800px"
+      width="1100px"
     >
       <div class="form-container">
         <Form
@@ -263,7 +268,7 @@
       v-if="abilityDialogVisible"
       v-model="abilityDialogVisible"
       title="能力值"
-      width="800px"
+      width="900px"
     >
       <div class="form-container">
         <AbilityForm
@@ -285,6 +290,33 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 编辑球员位置 -->
+    <el-dialog
+      v-if="positionDialogVisible"
+      v-model="positionDialogVisible"
+      title="位置"
+      width="800px"
+    >
+      <div class="form-container">
+        <PositionForm
+          :id="playerId"
+          ref="positionRef"
+        ></PositionForm>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
+            size="small"
+            @click="positionDialogVisible = false"
+          >取 消</el-button>
+          <el-button
+            type="primary"
+            size="small"
+            @click="positionSubmit"
+          >确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -293,9 +325,10 @@ import { getPlayer, delPlayer } from '@/api/player/info'
 import { getNation, getTeam } from '@/api/public'
 import useBaseHooks from '@/hooks/useBaseHooks'
 import { computed, onMounted, reactive, ref } from 'vue'
-import Form from './components/Form.vue'
-import AbilityForm from './components/AbilityForm.vue'
 import { useStore } from 'vuex'
+import Form from './components/Form.vue'
+import PositionForm from './components/PositionForm.vue'
+import AbilityForm from './components/AbilityForm.vue'
 
 const store = useStore()
 const formRef = ref(null)
@@ -334,11 +367,16 @@ const formDataDefault = reactive({
 })
 // 评分组件颜色
 const colors = ref(['#99A9BF', '#F7BA2A', '#FF9900'])
-// 能力值弹窗状态
-const abilityDialogVisible = ref(false)
 // 球员id
 const playerId = ref('')
+// 能力值弹窗状态
+const abilityDialogVisible = ref(false)
+// 能力值ref
 const abilityRef = ref(null)
+// 位置弹窗状态
+const positionDialogVisible = ref(false)
+// 位置ref
+const positionRef = ref(null)
 
 // 位置
 const ballParkPlace = computed(() => store.getters.ballParkPlace)
@@ -376,9 +414,11 @@ const getNationList = async () => {
 // 获取指定球员能力值
 const handleAbility = async (row) => {
   abilityDialogVisible.value = true
-  // const res = await getPlayerAbility({
-  //   id: row.id
-  // })
+  playerId.value = row.id
+}
+// 获取指定球员位置
+const handlePosition = async (row) => {
+  positionDialogVisible.value = true
   playerId.value = row.id
 }
 
@@ -393,6 +433,12 @@ const handleSubmit = () => {
 const abilitySubmit = () => {
   abilityRef.value.submit().then(() => {
     abilityDialogVisible.value = false
+  })
+}
+// 位置表单提交
+const positionSubmit = () => {
+  positionRef.value.submit().then(() => {
+    positionDialogVisible.value = false
   })
 }
 

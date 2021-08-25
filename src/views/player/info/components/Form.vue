@@ -10,19 +10,17 @@
       size="small"
     >
       <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="姓名" prop="name">
             <el-input v-model="formData.name" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="英文名" prop="english_name">
             <el-input v-model="formData.english_name" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="球队" prop="team_id">
             <el-select
               v-model="formData.team_id"
@@ -40,7 +38,9 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+      </el-row>
+      <el-row>
+        <el-col :span="8">
           <el-form-item label="国籍" prop="nation_id">
             <el-select
               v-model="formData.nation_id"
@@ -58,26 +58,24 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="球衣号码" prop="uniform_number">
             <el-input v-model="formData.uniform_number" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="身高" prop="high">
             <el-input v-model="formData.high" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="体重" prop="weight">
             <el-input v-model="formData.weight" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="生日" prop="birthday">
             <el-date-picker
               v-model="formData.birthday"
@@ -89,9 +87,7 @@
             </el-date-picker>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="位置" prop="position">
             <el-select
               v-model="formData.position"
@@ -109,7 +105,9 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+      </el-row>
+      <el-row>
+        <el-col :span="8">
           <el-form-item label="惯用脚" prop="feet">
             <el-select
               v-model="formData.feet"
@@ -127,9 +125,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="逆足能力" prop="inverse_enough">
             <el-select
               v-model="formData.inverse_enough"
@@ -147,7 +143,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="花式技巧" prop="fancy_tricks">
             <el-select
               v-model="formData.fancy_tricks"
@@ -167,7 +163,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="国际声望" prop="international_reputation">
             <el-select
               v-model="formData.international_reputation"
@@ -185,14 +181,12 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="身价" prop="price">
             <el-input v-model="formData.price" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="合同到期" prop="contract_expire">
             <el-date-picker
               v-model="formData.contract_expire"
@@ -204,7 +198,9 @@
             </el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+      </el-row>
+      <el-row>
+        <el-col :span="8">
           <el-form-item label="技术特点" prop="technical_feature">
             <el-select
               v-model="formData.technical_feature"
@@ -223,9 +219,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="强项" prop="strong_point">
             <el-select
               v-model="formData.strong_point"
@@ -244,7 +238,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="弱项" prop="weak_point">
             <el-select
               v-model="formData.weak_point"
@@ -299,7 +293,7 @@ import useUploadHooks from '@/hooks/useUploadHooks'
 import { useStore } from 'vuex'
 
 export default defineComponent({
-  name: 'UserForm',
+  name: 'PlayerForm',
   props: {
     data: {
       type: Object,
