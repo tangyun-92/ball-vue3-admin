@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-08-23 13:29:23
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-25 11:24:13
+ * @Last Modified time: 2021-08-25 14:48:26
  * 球员信息
  */
 import request from '@/utils/request'
@@ -106,6 +106,43 @@ export function getPlayerPosition(data) {
 export function updatePlayerPosition(data) {
   return request({
     url: '/players/updatePosition',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 获取球员历史数据
+ * @param {*} data
+ * @returns
+ */
+export function getPlayerData(data) {
+  return request({
+    url: '/players/findPlayerData',
+    method: 'post',
+    data
+  })
+}
+/**
+ * 获取球员历史数据
+ * @param {*} data
+ * @returns
+ */
+export function updatePlayerData(data) {
+  return request({
+    url: '/players/updatePlayerData',
+    method: 'post',
+    data
+  })
+}
+/**
+ * 获取球员历史数据
+ * @param {*} data
+ * @returns
+ */
+export function deletePlayerData(data) {
+  return request({
+    url: '/players/deletePlayerData',
     method: 'post',
     data
   })

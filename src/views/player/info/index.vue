@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-25 13:26:34
+ * @Last Modified time: 2021-08-25 16:02:32
  球员管理
  */
 
@@ -216,6 +216,11 @@
                 size="small"
                 @click="handlePosition(scope.row)"
               >位置</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="handlePlayerData(scope.row)"
+              >历史数据</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -271,10 +276,10 @@
       width="900px"
     >
       <div class="form-container">
-        <AbilityForm
+        <ability-form
           :id="playerId"
           ref="abilityRef"
-        ></AbilityForm>
+        ></ability-form>
       </div>
       <template #footer>
         <span class="dialog-footer">
@@ -317,6 +322,23 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 历史数据 -->
+    <el-dialog
+      v-if="playerDataDialogVisible"
+      v-model="playerDataDialogVisible"
+      title="历史数据"
+      width="1200px"
+    >
+      <PlayerDataTable :player-id="playerId" />
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
+            size="small"
+            @click="playerDataDialogVisible = false"
+          >关 闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -324,11 +346,12 @@
 import { getPlayer, delPlayer } from '@/api/player/info'
 import { getNation, getTeam } from '@/api/public'
 import useBaseHooks from '@/hooks/useBaseHooks'
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, defineComponent, onMounted, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import Form from './components/Form.vue'
 import PositionForm from './components/PositionForm.vue'
-import AbilityForm from './components/AbilityForm.vue'
+import PlayerDataTable from './components/PlayerDataTable.vue'
+import AbilityForm from './components/AbilitiesForm.vue'
 
 const store = useStore()
 const formRef = ref(null)
@@ -377,6 +400,8 @@ const abilityRef = ref(null)
 const positionDialogVisible = ref(false)
 // 位置ref
 const positionRef = ref(null)
+// 历史数据弹窗状态
+const playerDataDialogVisible = ref(false)
 
 // 位置
 const ballParkPlace = computed(() => store.getters.ballParkPlace)
@@ -411,14 +436,19 @@ const getNationList = async () => {
   const res = await getNation()
   nationList.value = res.data.records
 }
-// 获取指定球员能力值
+// 球员能力值弹窗
 const handleAbility = async (row) => {
   abilityDialogVisible.value = true
   playerId.value = row.id
 }
-// 获取指定球员位置
+// 球员位置弹窗
 const handlePosition = async (row) => {
   positionDialogVisible.value = true
+  playerId.value = row.id
+}
+// 历史数据弹窗
+const handlePlayerData = async (row) => {
+  playerDataDialogVisible.value = true
   playerId.value = row.id
 }
 

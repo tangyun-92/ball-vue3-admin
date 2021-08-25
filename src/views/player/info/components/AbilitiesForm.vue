@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-08-25 09:56:09
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-25 13:26:01
+ * @Last Modified time: 2021-08-25 16:02:23
  能力值
  */
 <template>
@@ -229,7 +229,7 @@ import {
   defineComponent,
   onMounted,
   ref
-} from '@vue/runtime-core'
+} from 'vue'
 import { updatePlayerAbility, getPlayerAbility } from '@/api/player/info'
 import { ElMessage } from 'element-plus'
 

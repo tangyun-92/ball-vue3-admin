@@ -285,10 +285,9 @@ import {
   onMounted,
   reactive,
   ref
-} from '@vue/runtime-core'
+} from 'vue'
 import { createOrEditPlayer, uploadImage } from '@/api/player/info'
 import { ElMessage } from 'element-plus'
-import { whether } from '@/constants/dictionary'
 import useUploadHooks from '@/hooks/useUploadHooks'
 import { useStore } from 'vuex'
 
@@ -427,7 +426,6 @@ export default defineComponent({
       submit,
       formData,
       formRef,
-      whether,
       nationList,
       teamList,
       token,

@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-08-25 09:56:09
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-25 11:29:25
+ * @Last Modified time: 2021-08-25 14:29:54
  位置
  */
 <template>
@@ -110,7 +110,7 @@ import {
   onMounted,
   ref
 } from 'vue'
-import { updatePlayerAbility, getPlayerPosition } from '@/api/player/info'
+import { updatePlayerPosition, getPlayerPosition } from '@/api/player/info'
 import { ElMessage } from 'element-plus'
 
 export default defineComponent({
@@ -159,7 +159,7 @@ export default defineComponent({
       return new Promise((resolve, resject) => {
         formRef.value.validate(async (valid) => {
           if (valid) {
-            const res = await getPlayerPosition({
+            const res = await updatePlayerPosition({
               ...formData.value,
               player_id: props.id
             })
