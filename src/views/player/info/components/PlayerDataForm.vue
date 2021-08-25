@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-29 10:37:09
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-25 15:22:38
+ * @Last Modified time: 2021-08-25 16:05:41
  参数配置Form
  */
 <template>
@@ -216,7 +216,6 @@
 import { defineComponent, onMounted, reactive, ref } from 'vue'
 import { updatePlayerData } from '@/api/player/info'
 import { ElMessage } from 'element-plus'
-import { whether } from '@/constants/dictionary'
 
 export default defineComponent({
   name: 'PlayerDataForm',
@@ -293,8 +292,7 @@ export default defineComponent({
     return {
       submit,
       formData,
-      formRef,
-      whether
+      formRef
     }
   }
 })
