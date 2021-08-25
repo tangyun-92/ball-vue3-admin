@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-24 16:37:38
+ * @Last Modified time: 2021-08-24 17:29:41
  字典管理
  */
 
@@ -174,6 +174,7 @@ const formDataDefault = reactive({
   remark: '',
   if_parent: '',
   parent_code: '',
+  sort: '',
   id: null
 })
 

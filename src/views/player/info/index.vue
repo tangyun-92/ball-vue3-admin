@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-24 17:08:32
+ * @Last Modified time: 2021-08-25 10:22:32
  球员管理
  */
 
@@ -258,6 +258,33 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 编辑球员能力值 -->
+    <el-dialog
+      v-if="abilityDialogVisible"
+      v-model="abilityDialogVisible"
+      title="能力值"
+      width="800px"
+    >
+      <div class="form-container">
+        <AbilityForm
+          :id="playerId"
+          ref="abilityRef"
+        ></AbilityForm>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
+            size="small"
+            @click="abilityDialogVisible = false"
+          >取 消</el-button>
+          <el-button
+            type="primary"
+            size="small"
+            @click="abilitySubmit"
+          >确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -265,9 +292,9 @@
 import { getPlayer, delPlayer } from '@/api/player/info'
 import { getNation, getTeam } from '@/api/public'
 import useBaseHooks from '@/hooks/useBaseHooks'
-import { computed, defineComponent, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import Form from './components/Form.vue'
-import { whether } from '@/constants/dictionary'
+import AbilityForm from './components/AbilityForm.vue'
 import { useStore } from 'vuex'
 
 const store = useStore()
@@ -305,7 +332,13 @@ const formDataDefault = reactive({
   weak_point: '',
   id: null
 })
+// 评分组件颜色
 const colors = ref(['#99A9BF', '#F7BA2A', '#FF9900'])
+// 能力值弹窗状态
+const abilityDialogVisible = ref(false)
+// 球员id
+const playerId = ref('')
+const abilityRef = ref(null)
 
 // 位置
 const ballParkPlace = computed(() => store.getters.ballParkPlace)
@@ -340,14 +373,29 @@ const getNationList = async () => {
   const res = await getNation()
   nationList.value = res.data.records
 }
+// 获取指定球员能力值
+const handleAbility = async (row) => {
+  abilityDialogVisible.value = true
+  // const res = await getPlayerAbility({
+  //   id: row.id
+  // })
+  playerId.value = row.id
+}
 
 // 新增/编辑表单提交
 const handleSubmit = () => {
   formRef.value.submit().then(() => {
     data.formDialogVisible = false
-    getTableList()
+    getTableList(data.currentPage)
   })
 }
+// 能力值表单提交
+const abilitySubmit = () => {
+  abilityRef.value.submit().then(() => {
+    abilityDialogVisible.value = false
+  })
+}
+
 </script>
 
 <style lang="scss">

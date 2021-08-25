@@ -37,6 +37,20 @@
       </el-row>
       <el-row>
         <el-col :span="24">
+          <el-form-item
+            label="排序"
+            prop="sort"
+          >
+            <el-input
+              v-model.trim="formData.sort"
+              placeholder="请输入"
+              size="small"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
           <el-form-item label="说明" prop="remark">
             <el-input
               v-model="formData.remark"
@@ -94,6 +108,7 @@ export default defineComponent({
       remark: '',
       if_parent: '',
       parent_code: '',
+      sort: '',
       id: null
     })
     // 校验规则
