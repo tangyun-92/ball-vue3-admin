@@ -36,13 +36,14 @@ service.interceptors.response.use(
     }
   },
   (error) => {
+    console.log(error.response)
     if (error.response && error.response.status === 401) {
-      router.push('/login')
       ElMessage({
         type: 'error',
         message: 'token已过期，请重新登录'
       })
-      return Promise.reject(error)
+      router.push('/login')
+      // return Promise.reject(error)
     }
     ElMessage({
       type: 'error',

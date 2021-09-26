@@ -52,8 +52,9 @@ const loginOut = () => {
     type: 'warning'
   })
     .then(() => {
-      localStorage.removeItem(window._BASE_CONFIG.projectKey)
       router.push('/login')
+      store.commit('user/SET_TOKEN', '')
+      localStorage.removeItem(window._BASE_CONFIG.projectKey)
     })
     .catch(() => {})
 }

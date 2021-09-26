@@ -34,7 +34,7 @@ export const constantRoutes = [
         path: '/system',
         component: () => import('@/views/system/index.vue'),
         name: 'System',
-        meta: { title: '系统', icon: 'el-icon-position', affix: false },
+        meta: { title: '系统管理', icon: 'el-icon-position', affix: false },
         redirect: '/system/dict',
         children: [
           {
@@ -52,17 +52,17 @@ export const constantRoutes = [
         ]
       },
       {
-        path: '/player',
-        component: () => import('@/views/player/index.vue'),
+        path: '/data-management',
+        component: () => import('@/views/data-management/index.vue'),
         name: 'Player',
-        meta: { title: '球员', icon: 'el-icon-position' },
-        redirect: '/player/info',
+        meta: { title: '数据管理', icon: 'el-icon-position' },
+        redirect: '/data-management/player',
         children: [
           {
-            path: '/player/info',
+            path: '/data-management/player',
             name: 'PlayerInfo',
-            component: () => import('@/views/player/info/index.vue'),
-            meta: { title: '球员信息', icon: 'el-icon-position' }
+            component: () => import('@/views/data-management/player/index.vue'),
+            meta: { title: '球员管理', icon: 'el-icon-position' }
           }
         ]
       }
