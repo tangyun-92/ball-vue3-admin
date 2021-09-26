@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-08-25 09:56:09
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-25 14:29:54
+ * @Last Modified time: 2021-09-26 14:56:13
  位置
  */
 <template>
@@ -104,80 +104,74 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import {
-  defineComponent,
+  defineProps,
+  defineExpose,
   onMounted,
   ref
 } from 'vue'
 import { updatePlayerPosition, getPlayerPosition } from '@/api/player/info'
 import { ElMessage } from 'element-plus'
 
-export default defineComponent({
-  name: 'PositionForm',
-  props: {
-    id: {
-      type: Number,
-      default() {
-        return null
-      }
-    }
-  },
-  setup(props) {
-    const formRef = ref(null)
-    // 表单数据
-    const formData = ref({
-      CF: '',
-      LW: '',
-      RW: '',
-      LM: '',
-      RM: '',
-      SF: '',
-      AMF: '',
-      CMF: '',
-      DM: '',
-      WL: '',
-      WR: '',
-      LB: '',
-      RB: '',
-      CB: '',
-      GK: '',
-      id: null
-    })
-
-    onMounted(async () => {
-      const res = await getPlayerPosition({
-        id: props.id
-      })
-      if (res.data.records) {
-        formData.value = res.data.records
-      }
-    })
-
-    // 提交表单
-    const submit = () => {
-      return new Promise((resolve, resject) => {
-        formRef.value.validate(async (valid) => {
-          if (valid) {
-            const res = await updatePlayerPosition({
-              ...formData.value,
-              player_id: props.id
-            })
-            ElMessage.success(res.message)
-            resolve(res)
-          } else {
-            resject('表单验证未通过')
-          }
-        })
-      })
-    }
-
-    return {
-      submit,
-      formData,
-      formRef
+const props = defineProps({
+  id: {
+    type: Number,
+    default() {
+      return null
     }
   }
+})
+const formRef = ref(null)
+// 表单数据
+const formData = ref({
+  CF: '',
+  LW: '',
+  RW: '',
+  LM: '',
+  RM: '',
+  SF: '',
+  AMF: '',
+  CMF: '',
+  DM: '',
+  WL: '',
+  WR: '',
+  LB: '',
+  RB: '',
+  CB: '',
+  GK: '',
+  id: null
+})
+
+onMounted(async () => {
+  const res = await getPlayerPosition({
+    id: props.id
+  })
+  if (res.data.records) {
+    formData.value = res.data.records
+  }
+})
+
+// 提交表单
+const submit = () => {
+  return new Promise((resolve, resject) => {
+    formRef.value.validate(async (valid) => {
+      if (valid) {
+        const res = await updatePlayerPosition({
+          ...formData.value,
+          player_id: props.id
+        })
+        ElMessage.success(res.message)
+        resolve(res)
+      } else {
+        resject('表单验证未通过')
+      }
+    })
+  })
+}
+
+defineExpose({
+  submit
 })
 </script>
 

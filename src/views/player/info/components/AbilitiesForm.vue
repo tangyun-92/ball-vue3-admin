@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-08-25 09:56:09
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-25 16:02:23
+ * @Last Modified time: 2021-09-26 15:17:06
  能力值
  */
 <template>
@@ -224,103 +224,98 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import {
-  defineComponent,
+  defineProps,
+  defineExpose,
   onMounted,
   ref
 } from 'vue'
 import { updatePlayerAbility, getPlayerAbility } from '@/api/player/info'
 import { ElMessage } from 'element-plus'
 
-export default defineComponent({
-  name: 'AbilityForm',
-  props: {
-    id: {
-      type: Number,
-      default() {
-        return null
-      }
-    }
-  },
-  setup(props) {
-    const formRef = ref(null)
-    // 表单数据
-    const formData = ref({
-      comprehensive: '',
-      speed: '',
-      shoot: '',
-      pass: '',
-      dribbling: '',
-      defend: '',
-      power: '',
-      cross: '',
-      heading: '',
-      short_pass: '',
-      volley: '',
-      arc: '',
-      free_kick: '',
-      long_pass: '',
-      ball_control: '',
-      speed_up: '',
-      agility: '',
-      reaction: '',
-      balance: '',
-      shooting_power: '',
-      bounce: '',
-      stamina: '',
-      strong: '',
-      long_shot: '',
-      aggressiveness: '',
-      intercept_awareness: '',
-      positioning: '',
-      view: '',
-      penalty_kick: '',
-      marking: '',
-      break_off: '',
-      slide_tackle: '',
-      m_fish_dive: '',
-      m_hand_shape: '',
-      m_open_ball: '',
-      m_stance: '',
-      m_reaction: '',
-      id: null
-    })
-
-    onMounted(async () => {
-      const res = await getPlayerAbility({
-        id: props.id
-      })
-      if (res.data.records) {
-        formData.value = res.data.records
-      }
-    })
-
-    // 提交表单
-    const submit = () => {
-      return new Promise((resolve, resject) => {
-        formRef.value.validate(async (valid) => {
-          if (valid) {
-            const res = await updatePlayerAbility({
-              ...formData.value,
-              player_id: props.id
-            })
-            ElMessage.success(res.message)
-            resolve(res)
-          } else {
-            resject('表单验证未通过')
-          }
-        })
-      })
-    }
-
-    return {
-      submit,
-      formData,
-      formRef
+const props = defineProps({
+  id: {
+    type: Number,
+    default() {
+      return null
     }
   }
 })
+const formRef = ref(null)
+// 表单数据
+const formData = ref({
+  comprehensive: '',
+  speed: '',
+  shoot: '',
+  pass: '',
+  dribbling: '',
+  defend: '',
+  power: '',
+  cross: '',
+  heading: '',
+  short_pass: '',
+  volley: '',
+  arc: '',
+  free_kick: '',
+  long_pass: '',
+  ball_control: '',
+  speed_up: '',
+  agility: '',
+  reaction: '',
+  balance: '',
+  shooting_power: '',
+  bounce: '',
+  stamina: '',
+  strong: '',
+  long_shot: '',
+  aggressiveness: '',
+  intercept_awareness: '',
+  positioning: '',
+  view: '',
+  penalty_kick: '',
+  marking: '',
+  break_off: '',
+  slide_tackle: '',
+  m_fish_dive: '',
+  m_hand_shape: '',
+  m_open_ball: '',
+  m_stance: '',
+  m_reaction: '',
+  id: null
+})
+
+onMounted(async () => {
+  const res = await getPlayerAbility({
+    id: props.id
+  })
+  if (res.data.records) {
+    formData.value = res.data.records
+  }
+})
+
+// 提交表单
+const submit = () => {
+  return new Promise((resolve, resject) => {
+    formRef.value.validate(async (valid) => {
+      if (valid) {
+        const res = await updatePlayerAbility({
+          ...formData.value,
+          player_id: props.id
+        })
+        ElMessage.success(res.message)
+        resolve(res)
+      } else {
+        resject('表单验证未通过')
+      }
+    })
+  })
+}
+
+defineExpose({
+  submit
+})
+
 </script>
 
 <style lang='scss' scoped>

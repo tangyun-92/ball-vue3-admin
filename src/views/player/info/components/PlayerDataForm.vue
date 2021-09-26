@@ -2,8 +2,8 @@
  * @Author: 唐云
  * @Date: 2021-07-29 10:37:09
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-25 16:05:41
- 参数配置Form
+ * @Last Modified time: 2021-09-26 15:18:55
+ 历史数据Form
  */
 <template>
   <div>
@@ -212,89 +212,82 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, onMounted, reactive, ref } from 'vue'
+<script setup>
+import { defineProps, defineExpose, onMounted, reactive, ref } from 'vue'
 import { updatePlayerData } from '@/api/player/info'
 import { ElMessage } from 'element-plus'
 
-export default defineComponent({
-  name: 'PlayerDataForm',
-  props: {
-    data: {
-      type: Object,
-      default() {
-        return {}
-      }
-    },
-    status: {
-      type: String,
-      default: 'create'
-    },
-    id: {
-      type: Number,
-      default: null
+const props = defineProps({
+  data: {
+    type: Object,
+    default() {
+      return {}
     }
   },
-  setup(props) {
-    const formRef = ref(null)
-    // 表单数据
-    const formData = reactive({
-      time: '',
-      enter_field: '',
-      starter: '',
-      game_time: '',
-      goal: '',
-      assist: '',
-      averaging_goal: '',
-      every_time: '',
-      be_foul: '',
-      shoot: '',
-      target_rate: '',
-      offside: '',
-      key_pass: '',
-      pass_total: '',
-      pass_success: '',
-      averaging_steal: '',
-      averaging_intercept: '',
-      averaging_clearance: '',
-      playing_time: '',
-      foul: '',
-      yellow_card: '',
-      red_card: '',
-      id: null,
-      player_id: null
-    })
-
-    onMounted(() => {
-      Object.keys(formData).forEach((key) => {
-        formData[key] = props.data[key]
-      })
-    })
-
-    // 提交表单
-    const submit = () => {
-      return new Promise((resolve, resject) => {
-        formRef.value.validate(async (valid) => {
-          if (valid) {
-            const res = await updatePlayerData({
-              ...formData,
-              player_id: props.id
-            })
-            ElMessage.success(res.message)
-            resolve(res)
-          } else {
-            resject('表单验证未通过')
-          }
-        })
-      })
-    }
-
-    return {
-      submit,
-      formData,
-      formRef
-    }
+  status: {
+    type: String,
+    default: 'create'
+  },
+  id: {
+    type: Number,
+    default: null
   }
+})
+const formRef = ref(null)
+// 表单数据
+const formData = reactive({
+  time: '',
+  enter_field: '',
+  starter: '',
+  game_time: '',
+  goal: '',
+  assist: '',
+  averaging_goal: '',
+  every_time: '',
+  be_foul: '',
+  shoot: '',
+  target_rate: '',
+  offside: '',
+  key_pass: '',
+  pass_total: '',
+  pass_success: '',
+  averaging_steal: '',
+  averaging_intercept: '',
+  averaging_clearance: '',
+  playing_time: '',
+  foul: '',
+  yellow_card: '',
+  red_card: '',
+  id: null,
+  player_id: null
+})
+
+onMounted(() => {
+  Object.keys(formData).forEach((key) => {
+    formData[key] = props.data[key]
+  })
+})
+
+// 提交表单
+const submit = () => {
+  return new Promise((resolve, resject) => {
+    formRef.value.validate(async (valid) => {
+      if (valid) {
+        const res = await updatePlayerData({
+          ...formData,
+          player_id: props.id
+        })
+        ElMessage.success(res.message)
+        resolve(res)
+      } else {
+        resject('表单验证未通过')
+      }
+    })
+  })
+}
+
+defineExpose({
+  submit
 })
 </script>
 

@@ -278,10 +278,11 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import {
   computed,
-  defineComponent,
+  defineProps,
+  defineExpose,
   onMounted,
   reactive,
   ref
@@ -291,161 +292,134 @@ import { ElMessage } from 'element-plus'
 import useUploadHooks from '@/hooks/useUploadHooks'
 import { useStore } from 'vuex'
 
-export default defineComponent({
-  name: 'PlayerForm',
-  props: {
-    data: {
-      type: Object,
-      default() {
-        return {}
-      }
-    },
-    status: {
-      type: String,
-      default: 'create'
-    },
-    nation: {
-      type: Array,
-      default() {
-        return []
-      }
-    },
-    team: {
-      type: Array,
-      default() {
-        return []
-      }
+const props = defineProps({
+  data: {
+    type: Object,
+    default() {
+      return {}
     }
   },
-  setup(props) {
-    const store = useStore()
-    const uploadUrl = window._BASE_CONFIG.baseUrl + '/players/upload'
-    const formRef = ref(null)
-    // 表单数据
-    const formData = reactive({
-      name: '',
-      english_name: '',
-      avatar: '',
-      team_id: null,
-      nation_id: null,
-      uniform_number: '',
-      high: '',
-      weight: '',
-      birthday: '',
-      age: '',
-      position: '',
-      feet: '',
-      inverse_enough: null,
-      fancy_tricks: null,
-      international_reputation: null,
-      price: '',
-      contract_expire: '',
-      technical_feature: '',
-      strong_point: '',
-      weak_point: '',
-      id: null
-    })
-    // 校验规则
-    const rules = {
-      name: [{ required: true, message: '不能为空', trigger: 'blur' }],
-      english_name: [{ required: true, message: '不能为空', trigger: 'blur' }],
-      nation_id: [{ required: true, message: '不能为空', trigger: 'change' }],
-      team_id: [{ required: true, message: '不能为空', trigger: 'change' }],
-      position: [{ required: true, message: '不能为空', trigger: 'change' }],
-      feet: [{ required: true, message: '不能为空', trigger: 'change' }],
-      inverse_enough: [
-        { required: true, message: '不能为空', trigger: 'change' }
-      ],
-      fancy_tricks: [
-        { required: true, message: '不能为空', trigger: 'change' }
-      ],
-      international_reputation: [
-        { required: true, message: '不能为空', trigger: 'change' }
-      ],
-      price: [{ required: true, message: '不能为空', trigger: 'blur' }]
+  status: {
+    type: String,
+    default: 'create'
+  },
+  nation: {
+    type: Array,
+    default() {
+      return []
     }
-
-    // 位置
-    const ballParkPlace = computed(() => store.getters.ballParkPlace)
-    // 惯用脚
-    const habitFeet = computed(() => store.getters.habitFeet)
-    // 星级
-    const starLevel = computed(() => store.getters.starLevel)
-    // 技术特点
-    const technicalFeature = computed(() => store.getters.technicalFeature)
-    // 强弱项
-    const strongAndWeak = computed(() => store.getters.strongAndWeak)
-
-    const {
-      token,
-      uploadChange,
-      uploadRemove,
-      uploadSuccess,
-      beforeUpload,
-      uploadExceed,
-      uploadData,
-      submitUpload,
-      upload
-    } = useUploadHooks({ reqFn: uploadImage })
-
-    // 国籍列表
-    const nationList = computed(() => props.nation)
-    // 球队列表
-    const teamList = computed(() => props.team)
-
-    onMounted(() => {
-      Object.keys(formData).forEach((key) => {
-        formData[key] = props.data[key]
-      })
-      uploadData.imageUrl = props.data.avatar
-    })
-
-    // 提交表单
-    const submit = () => {
-      return new Promise((resolve, resject) => {
-        formRef.value.validate(async (valid) => {
-          if (valid) {
-            const res = await createOrEditPlayer({
-              ...formData,
-              // inverse_enough: Number(formData.inverse_enough),
-              // fancy_tricks: Number(formData.fancy_tricks),
-              // international_reputation: Number(formData.international_reputation),
-              avatar: uploadData.imageUrl
-            })
-            ElMessage.success(res.message)
-            resolve(res)
-          } else {
-            resject('表单验证未通过')
-          }
-        })
-      })
-    }
-
-    return {
-      rules,
-      submit,
-      formData,
-      formRef,
-      nationList,
-      teamList,
-      token,
-      uploadSuccess,
-      beforeUpload,
-      uploadData,
-      uploadExceed,
-      submitUpload,
-      upload,
-      uploadChange,
-      uploadRemove,
-      ballParkPlace,
-      habitFeet,
-      starLevel,
-      technicalFeature,
-      strongAndWeak,
-      uploadUrl
+  },
+  team: {
+    type: Array,
+    default() {
+      return []
     }
   }
 })
+const store = useStore()
+const uploadUrl = window._BASE_CONFIG.baseUrl + '/players/upload'
+const formRef = ref(null)
+// 表单数据
+const formData = reactive({
+  name: '',
+  english_name: '',
+  avatar: '',
+  team_id: null,
+  nation_id: null,
+  uniform_number: '',
+  high: '',
+  weight: '',
+  birthday: '',
+  age: '',
+  position: '',
+  feet: '',
+  inverse_enough: null,
+  fancy_tricks: null,
+  international_reputation: null,
+  price: '',
+  contract_expire: '',
+  technical_feature: '',
+  strong_point: '',
+  weak_point: '',
+  id: null
+})
+// 校验规则
+const rules = {
+  name: [{ required: true, message: '不能为空', trigger: 'blur' }],
+  english_name: [{ required: true, message: '不能为空', trigger: 'blur' }],
+  nation_id: [{ required: true, message: '不能为空', trigger: 'change' }],
+  team_id: [{ required: true, message: '不能为空', trigger: 'change' }],
+  position: [{ required: true, message: '不能为空', trigger: 'change' }],
+  feet: [{ required: true, message: '不能为空', trigger: 'change' }],
+  inverse_enough: [
+    { required: true, message: '不能为空', trigger: 'change' }
+  ],
+  fancy_tricks: [
+    { required: true, message: '不能为空', trigger: 'change' }
+  ],
+  international_reputation: [
+    { required: true, message: '不能为空', trigger: 'change' }
+  ],
+  price: [{ required: true, message: '不能为空', trigger: 'blur' }]
+}
+
+// 位置
+const ballParkPlace = computed(() => store.getters.ballParkPlace)
+// 惯用脚
+const habitFeet = computed(() => store.getters.habitFeet)
+// 星级
+const starLevel = computed(() => store.getters.starLevel)
+// 技术特点
+const technicalFeature = computed(() => store.getters.technicalFeature)
+// 强弱项
+const strongAndWeak = computed(() => store.getters.strongAndWeak)
+
+const {
+  token,
+  uploadChange,
+  uploadRemove,
+  uploadSuccess,
+  beforeUpload,
+  uploadExceed,
+  uploadData,
+  submitUpload,
+  upload
+} = useUploadHooks({ reqFn: uploadImage })
+
+// 国籍列表
+const nationList = computed(() => props.nation)
+// 球队列表
+const teamList = computed(() => props.team)
+
+onMounted(() => {
+  Object.keys(formData).forEach((key) => {
+    formData[key] = props.data[key]
+  })
+  uploadData.imageUrl = props.data.avatar
+})
+
+// 提交表单
+const submit = () => {
+  return new Promise((resolve, resject) => {
+    formRef.value.validate(async (valid) => {
+      if (valid) {
+        const res = await createOrEditPlayer({
+          ...formData,
+          avatar: uploadData.imageUrl
+        })
+        ElMessage.success(res.message)
+        resolve(res)
+      } else {
+        resject('表单验证未通过')
+      }
+    })
+  })
+}
+
+defineExpose({
+  submit
+})
+
 </script>
 
 <style lang='scss' scoped>
