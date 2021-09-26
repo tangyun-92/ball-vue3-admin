@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-29 10:37:09
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-09-26 15:18:55
+ * @Last Modified time: 2021-09-26 16:27:55
  历史数据Form
  */
 <template>
@@ -214,7 +214,7 @@
 
 <script setup>
 import { defineProps, defineExpose, onMounted, reactive, ref } from 'vue'
-import { updatePlayerData } from '@/api/player/info'
+import { updatePlayerData } from '@/api/data-management/player'
 import { ElMessage } from 'element-plus'
 
 const props = defineProps({

@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-09-26 14:45:55
+ * @Last Modified time: 2021-09-26 16:07:39
  字典管理
  */
 
@@ -27,7 +27,6 @@
             stripe
             style="width: 100%"
             highlight-current-row
-            size="small"
             @row-click="chooseOne"
           >
             <el-table-column label="" width="60">
@@ -84,7 +83,6 @@
             stripe
             style="width: 100%"
             highlight-current-row
-            size="small"
           >
             <el-table-column prop="name" label="字典属性"> </el-table-column>
             <el-table-column prop="code" label="Key值"> </el-table-column>

@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-08-25 09:56:09
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-09-26 14:56:13
+ * @Last Modified time: 2021-09-26 16:28:34
  位置
  */
 <template>
@@ -111,7 +111,7 @@ import {
   onMounted,
   ref
 } from 'vue'
-import { updatePlayerPosition, getPlayerPosition } from '@/api/player/info'
+import { updatePlayerPosition, getPlayerPosition } from '@/api/data-management/player'
 import { ElMessage } from 'element-plus'
 
 const props = defineProps({

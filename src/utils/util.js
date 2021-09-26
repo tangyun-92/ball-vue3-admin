@@ -1,5 +1,7 @@
 const getQueryStringByName = function (name) {
-  var result = location.search.match(new RegExp('[?&]' + name + '=([^&]+)', 'i'))
+  var result = location.search.match(
+    new RegExp('[?&]' + name + '=([^&]+)', 'i')
+  )
   if (result == null || result.length < 1) {
     return ''
   }
@@ -31,13 +33,32 @@ const DateFormat = function (date, fmt) {
     'q+': Math.floor((date.getMonth() + 3) / 3), // 季度
     S: date.getMilliseconds() // 毫秒
   }
-  if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
+  if (/(y+)/.test(fmt)) {
+    fmt = fmt.replace(
+      RegExp.$1,
+      (date.getFullYear() + '').substr(4 - RegExp.$1.length)
+    )
+  }
   for (var k in o) {
     if (new RegExp('(' + k + ')').test(fmt)) {
-      fmt = fmt.replace(RegExp.$1, RegExp.$1.length === 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length))
+      fmt = fmt.replace(
+        RegExp.$1,
+        RegExp.$1.length === 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length)
+      )
     }
   }
   return fmt
 }
 
-export { getQueryStringByName, transformData, DateFormat }
+/**
+ * 根据传递的value过滤本地constants数据
+ * @param {*} param 需要过滤的参数
+ * @param {*} arr 需要比对的数组
+ * @returns 过滤后的数据
+ */
+const filterConstants = function (param, arr) {
+  const res = arr.find((item) => item.value === param)
+  return res.label
+}
+
+export { getQueryStringByName, transformData, DateFormat, filterConstants }

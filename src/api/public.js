@@ -34,3 +34,15 @@ export function getNation(data) {
   })
 }
 
+/**
+ * 奖项列表
+ * @param {*} data
+ * @returns
+ */
+export function getAward(data) {
+  return request({
+    url: '/awards/list',
+    method: 'post',
+    data
+  })
+}

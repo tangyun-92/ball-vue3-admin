@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-08-25 09:56:09
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-09-26 15:17:06
+ * @Last Modified time: 2021-09-26 16:28:20
  能力值
  */
 <template>
@@ -231,7 +231,7 @@ import {
   onMounted,
   ref
 } from 'vue'
-import { updatePlayerAbility, getPlayerAbility } from '@/api/player/info'
+import { updatePlayerAbility, getPlayerAbility } from '@/api/data-management/player'
 import { ElMessage } from 'element-plus'
 
 const props = defineProps({

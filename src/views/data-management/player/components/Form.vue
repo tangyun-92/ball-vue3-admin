@@ -287,7 +287,7 @@ import {
   reactive,
   ref
 } from 'vue'
-import { createOrEditPlayer, uploadImage } from '@/api/player/info'
+import { createOrEditPlayer, uploadImage } from '@/api/data-management/player'
 import { ElMessage } from 'element-plus'
 import useUploadHooks from '@/hooks/useUploadHooks'
 import { useStore } from 'vuex'

@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-25 16:02:32
+ * @Last Modified time: 2021-09-26 16:56:35
  球员管理
  */
 
@@ -115,12 +115,12 @@
         <el-table
           :data="data.tableData"
           stripe
-          size="small"
           style="width: 100%"
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55"> </el-table-column>
-          <el-table-column prop="name" label="姓名" width="150"> </el-table-column>
+          <el-table-column prop="name" label="姓名" width="150">
+          </el-table-column>
           <el-table-column prop="english_name" label="英文名" width="150">
           </el-table-column>
           <el-table-column prop="team" label="所属球队"> </el-table-column>
@@ -137,7 +137,7 @@
               {{ scope.row.weight }}<span v-if="scope.row.high">kg</span>
             </template>
           </el-table-column>
-          <el-table-column prop="birthday" label="生日" width="90">
+          <el-table-column prop="birthday" label="生日" width="100">
           </el-table-column>
           <el-table-column prop="position" label="位置">
             <template #default="scope">
@@ -183,7 +183,7 @@
           <el-table-column prop="price" label="身价">
             <template #default="scope"> {{ scope.row.price }}万欧 </template>
           </el-table-column>
-          <el-table-column prop="contract_expire" label="合同到期" width="90">
+          <el-table-column prop="contract_expire" label="合同到期" width="100">
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="180">
             <template #default="scope">
@@ -221,6 +221,11 @@
                 size="small"
                 @click="handlePlayerData(scope.row)"
               >历史数据</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="handleHonor(scope.row)"
+              >荣誉记录</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -276,10 +281,7 @@
       width="900px"
     >
       <div class="form-container">
-        <ability-form
-          :id="playerId"
-          ref="abilityRef"
-        ></ability-form>
+        <ability-form :id="playerId" ref="abilityRef"></ability-form>
       </div>
       <template #footer>
         <span class="dialog-footer">
@@ -303,10 +305,7 @@
       width="800px"
     >
       <div class="form-container">
-        <PositionForm
-          :id="playerId"
-          ref="positionRef"
-        ></PositionForm>
+        <PositionForm :id="playerId" ref="positionRef"></PositionForm>
       </div>
       <template #footer>
         <span class="dialog-footer">
@@ -329,7 +328,7 @@
       title="历史数据"
       width="1200px"
     >
-      <PlayerDataTable :player-id="playerId" />
+      <HistoryDataForm :player-id="playerId" />
       <template #footer>
         <span class="dialog-footer">
           <el-button
@@ -339,26 +338,44 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 荣誉记录 -->
+    <el-dialog
+      v-if="playerHonorDialogVisible"
+      v-model="playerHonorDialogVisible"
+      title="荣誉记录"
+      width="1200px"
+    >
+      <HonorTable
+        :player-id="playerId"
+        :award-list="awardList"
+        :team-list="teamList"
+      />
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
+            size="small"
+            @click="playerHonorDialogVisible = false"
+          >关 闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { getPlayer, delPlayer } from '@/api/player/info'
-import { getNation, getTeam } from '@/api/public'
+import { getPlayer, delPlayer } from '@/api/data-management/player'
+import { getAward, getNation, getTeam } from '@/api/public'
 import useBaseHooks from '@/hooks/useBaseHooks'
 import { computed, defineComponent, onMounted, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import Form from './components/Form.vue'
 import PositionForm from './components/PositionForm.vue'
-import PlayerDataTable from './components/PlayerDataTable.vue'
 import AbilityForm from './components/AbilitiesForm.vue'
+import HistoryDataForm from './history-data/HistoryDataTable.vue'
+import HonorTable from './honor-data/HonorTable.vue'
 
 const store = useStore()
-const formRef = ref(null)
-// 球队列表
-const teamList = ref([])
-// 国家列表
-const nationList = ref([])
+
 // 搜索数据
 const searchData = reactive({
   title: '',
@@ -392,22 +409,18 @@ const formDataDefault = reactive({
 const colors = ref(['#99A9BF', '#F7BA2A', '#FF9900'])
 // 球员id
 const playerId = ref('')
-// 能力值弹窗状态
-const abilityDialogVisible = ref(false)
-// 能力值ref
-const abilityRef = ref(null)
-// 位置弹窗状态
-const positionDialogVisible = ref(false)
-// 位置ref
-const positionRef = ref(null)
-// 历史数据弹窗状态
-const playerDataDialogVisible = ref(false)
 
+/**
+ * vuex
+ */
 // 位置
 const ballParkPlace = computed(() => store.getters.ballParkPlace)
 // 惯用脚
 const habitFeet = computed(() => store.getters.habitFeet)
 
+/**
+ * 自定义 hooks 数据
+ */
 const {
   data,
   handleSizeChange,
@@ -421,49 +434,68 @@ const {
   filterDict
 } = useBaseHooks({ reqFn: getPlayer, searchData, formDataDefault })
 
+/**
+ * 初始化请求
+ */
 onMounted(() => {
   getTeamList()
   getNationList()
+  getAwardList()
 })
-
-// 获取球队列表
+// 球队列表
+const teamList = ref([])
 const getTeamList = async () => {
   const res = await getTeam()
   teamList.value = res.data.records
 }
-// 获取国家列表
+// 国家列表
+const nationList = ref([])
 const getNationList = async () => {
   const res = await getNation()
   nationList.value = res.data.records
 }
-// 球员能力值弹窗
-const handleAbility = async (row) => {
-  abilityDialogVisible.value = true
-  playerId.value = row.id
-}
-// 球员位置弹窗
-const handlePosition = async (row) => {
-  positionDialogVisible.value = true
-  playerId.value = row.id
-}
-// 历史数据弹窗
-const handlePlayerData = async (row) => {
-  playerDataDialogVisible.value = true
-  playerId.value = row.id
+// 奖项列表
+const awardList = ref([])
+const getAwardList = async () => {
+  const res = await getAward()
+  awardList.value = res.data.records
 }
 
-// 新增/编辑表单提交
+/**
+ * 新增/编辑表单提交
+ */
+const formRef = ref(null)
 const handleSubmit = () => {
   formRef.value.submit().then(() => {
     data.formDialogVisible = false
     getTableList(data.currentPage)
   })
 }
+
+/**
+ * 球员能力值弹窗
+ */
+const abilityDialogVisible = ref(false)
+const abilityRef = ref(null)
+const handleAbility = (row) => {
+  abilityDialogVisible.value = true
+  playerId.value = row.id
+}
 // 能力值表单提交
 const abilitySubmit = () => {
   abilityRef.value.submit().then(() => {
     abilityDialogVisible.value = false
   })
+}
+
+/**
+ * 球员位置弹窗
+ */
+const positionDialogVisible = ref(false)
+const positionRef = ref(null)
+const handlePosition = (row) => {
+  positionDialogVisible.value = true
+  playerId.value = row.id
 }
 // 位置表单提交
 const positionSubmit = () => {
@@ -472,6 +504,23 @@ const positionSubmit = () => {
   })
 }
 
+/**
+ * 历史数据弹窗
+ */
+const playerDataDialogVisible = ref(false)
+const handlePlayerData = (row) => {
+  playerDataDialogVisible.value = true
+  playerId.value = row.id
+}
+
+/**
+ * 荣誉记录弹窗
+ */
+const playerHonorDialogVisible = ref(false)
+const handleHonor = async (row) => {
+  playerHonorDialogVisible.value = true
+  playerId.value = row.id
+}
 </script>
 
 <style lang="scss">

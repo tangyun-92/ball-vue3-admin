@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-30 15:11:43
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-09-26 15:17:41
+ * @Last Modified time: 2021-09-26 16:45:44
  历史数据
  */
 <template>
@@ -88,12 +88,12 @@
       width="800px"
     >
       <div class="form-container">
-        <PlayerDataForm
+        <HistoryDataForm
           :id="searchData.id"
           ref="formRef"
           :status="data.dialogStatus"
           :data="data.formData"
-        ></PlayerDataForm>
+        ></HistoryDataForm>
       </div>
       <template #footer>
         <span class="dialog-footer">
@@ -114,9 +114,9 @@
 
 <script setup>
 import { defineProps, onMounted, reactive, ref } from 'vue'
-import { getPlayerData, deletePlayerData } from '@/api/player/info'
+import { getPlayerData, deletePlayerData } from '@/api/data-management/player'
 import useBaseHooks from '@/hooks/useBaseHooks'
-import PlayerDataForm from './PlayerDataForm.vue'
+import HistoryDataForm from './HistoryDataForm.vue'
 
 const props = defineProps({
   playerId: {
@@ -169,8 +169,7 @@ const {
   handleSelectionChange,
   multipleSelectionHandler,
   handleCreate,
-  handleUpdate,
-  filterConstants
+  handleUpdate
 } = useBaseHooks({ reqFn: getPlayerData, searchData, formDataDefault })
 
 // 新增/编辑表单提交
