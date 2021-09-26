@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-09-26 16:56:35
+ * @Last Modified time: 2021-09-26 17:31:49
  球员管理
  */
 
@@ -185,7 +185,7 @@
           </el-table-column>
           <el-table-column prop="contract_expire" label="合同到期" width="100">
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="180">
+          <el-table-column fixed="right" label="操作" width="240">
             <template #default="scope">
               <el-button
                 type="text"
@@ -226,6 +226,11 @@
                 size="small"
                 @click="handleHonor(scope.row)"
               >荣誉记录</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="handleTransfer(scope.row)"
+              >转会记录</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -359,6 +364,26 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 转会记录 -->
+    <el-dialog
+      v-if="playerTransferDialogVisible"
+      v-model="playerTransferDialogVisible"
+      title="荣誉记录"
+      width="1200px"
+    >
+      <TransferTable
+        :player-id="playerId"
+        :team-list="teamList"
+      />
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
+            size="small"
+            @click="playerTransferDialogVisible = false"
+          >关 闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -373,6 +398,7 @@ import PositionForm from './components/PositionForm.vue'
 import AbilityForm from './components/AbilitiesForm.vue'
 import HistoryDataForm from './history-data/HistoryDataTable.vue'
 import HonorTable from './honor-data/HonorTable.vue'
+import TransferTable from './transfer-data/TransferTable.vue'
 
 const store = useStore()
 
@@ -517,10 +543,20 @@ const handlePlayerData = (row) => {
  * 荣誉记录弹窗
  */
 const playerHonorDialogVisible = ref(false)
-const handleHonor = async (row) => {
+const handleHonor = (row) => {
   playerHonorDialogVisible.value = true
   playerId.value = row.id
 }
+
+/**
+ * 转会记录弹窗
+ */
+const playerTransferDialogVisible = ref(false)
+const handleTransfer = (row) => {
+  playerTransferDialogVisible.value = true
+  playerId.value = row.id
+}
+
 </script>
 
 <style lang="scss">

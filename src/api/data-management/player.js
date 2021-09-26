@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-08-23 13:29:23
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-09-26 16:29:39
+ * @Last Modified time: 2021-09-26 17:08:42
  * 球员信息
  */
 import request from '@/utils/request'
@@ -180,6 +180,80 @@ export function updatePlayerHonor(data) {
 export function deletePlayerHonor(data) {
   return request({
     url: '/players/deletePlayerHonor',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 获取球员转会记录
+ * @param {*} data
+ * @returns
+ */
+export function getPlayerTransfer(data) {
+  return request({
+    url: '/players/findPlayerTransfer',
+    method: 'post',
+    data
+  })
+}
+/**
+ * 更新球员转会记录
+ * @param {*} data
+ * @returns
+ */
+export function updatePlayerTransfer(data) {
+  return request({
+    url: '/players/updatePlayerTransfer',
+    method: 'post',
+    data
+  })
+}
+/**
+ * 删除球员转会记录
+ * @param {*} data
+ * @returns
+ */
+export function deletePlayerTransfer(data) {
+  return request({
+    url: '/players/deletePlayerTransfer',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 获取球员伤病记录
+ * @param {*} data
+ * @returns
+ */
+export function getPlayerInjury(data) {
+  return request({
+    url: '/players/findPlayerInjury',
+    method: 'post',
+    data
+  })
+}
+/**
+ * 更新球员伤病记录
+ * @param {*} data
+ * @returns
+ */
+export function updatePlayerInjury(data) {
+  return request({
+    url: '/players/updatePlayerInjury',
+    method: 'post',
+    data
+  })
+}
+/**
+ * 删除球员伤病记录
+ * @param {*} data
+ * @returns
+ */
+export function deletePlayerInjury(data) {
+  return request({
+    url: '/players/deletePlayerInjury',
     method: 'post',
     data
   })

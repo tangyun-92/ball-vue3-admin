@@ -292,6 +292,8 @@ import { ElMessage } from 'element-plus'
 import useUploadHooks from '@/hooks/useUploadHooks'
 import { useStore } from 'vuex'
 
+const store = useStore()
+
 const props = defineProps({
   data: {
     type: Object,
@@ -316,7 +318,7 @@ const props = defineProps({
     }
   }
 })
-const store = useStore()
+
 const uploadUrl = window._BASE_CONFIG.baseUrl + '/players/upload'
 const formRef = ref(null)
 // 表单数据
@@ -373,6 +375,10 @@ const starLevel = computed(() => store.getters.starLevel)
 const technicalFeature = computed(() => store.getters.technicalFeature)
 // 强弱项
 const strongAndWeak = computed(() => store.getters.strongAndWeak)
+// 国籍列表
+const nationList = computed(() => props.nation)
+// 球队列表
+const teamList = computed(() => props.team)
 
 const {
   token,
@@ -385,11 +391,6 @@ const {
   submitUpload,
   upload
 } = useUploadHooks({ reqFn: uploadImage })
-
-// 国籍列表
-const nationList = computed(() => props.nation)
-// 球队列表
-const teamList = computed(() => props.team)
 
 onMounted(() => {
   Object.keys(formData).forEach((key) => {

@@ -2,8 +2,8 @@
  * @Author: 唐云
  * @Date: 2021-07-30 15:11:43
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-09-26 17:29:00
- 荣誉记录
+ * @Last Modified time: 2021-09-26 17:27:40
+ 转会记录
  */
 <template>
   <div>
@@ -20,7 +20,7 @@
       @click="
         multipleSelectionHandler({
           operation: '删除',
-          reqFn: deletePlayerHonor,
+          reqFn: deletePlayerTransfer,
           data: {
             id: selectIds
           }
@@ -35,15 +35,14 @@
     >
       <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column prop="time" label="时间"> </el-table-column>
-      <el-table-column prop="team" label="球队"> </el-table-column>
-      <el-table-column prop="if_personal" label="是否个人奖项">
-        <template #default="scope">
-          {{ filterConstants(scope.row.if_personal, whether) }}
-        </template>
+      <el-table-column prop="old_team" label="转出球队"> </el-table-column>
+      <el-table-column prop="new_team" label="转入球队"> </el-table-column>
+      <el-table-column prop="price" label="价格">
+        <template #default="scope"> {{ scope.row.price }}万欧 </template>
       </el-table-column>
-      <el-table-column prop="award_code" label="奖项名称">
+      <el-table-column prop="transfer_type" label="转会类型">
         <template #default="scope">
-          {{ filterAwardName(scope.row.award_code) }}
+          {{ filterDict(scope.row.transfer_type, transferType) }}
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
@@ -59,7 +58,7 @@
             @click="
               multipleSelectionHandler({
                 operation: '删除',
-                reqFn: deletePlayerHonor,
+                reqFn: deletePlayerTransfer,
                 data: {
                   id: String(scope.row.id).split(' ')
                 },
@@ -78,14 +77,14 @@
       width="500px"
     >
       <div class="form-container">
-        <HonorForm
+        <TransferForm
           :id="searchData.id"
           ref="formRef"
           :status="data.dialogStatus"
           :data="data.formData"
           :team-list="props.teamList"
           :award-list="props.awardList"
-        ></HonorForm>
+        ></TransferForm>
       </div>
       <template #footer>
         <span class="dialog-footer">
@@ -105,24 +104,20 @@
 </template>
 
 <script setup>
-import { defineProps, onMounted, reactive, ref } from 'vue'
-import { getPlayerHonor, deletePlayerHonor } from '@/api/data-management/player'
+import { computed, defineProps, onMounted, reactive, ref } from 'vue'
+import { getPlayerTransfer, deletePlayerTransfer } from '@/api/data-management/player'
 import useBaseHooks from '@/hooks/useBaseHooks'
-import HonorForm from './HonorForm.vue'
-import { filterConstants } from '@/utils/util'
+import TransferForm from './TransferForm.vue'
 import { whether } from '@/constants/dictionary'
+import { useStore } from 'vuex'
+
+const store = useStore()
 
 const props = defineProps({
   playerId: {
     type: Number,
     default() {
       return null
-    }
-  },
-  awardList: {
-    type: Array,
-    default() {
-      return []
     }
   },
   teamList: {
@@ -139,22 +134,16 @@ const searchData = reactive({
 })
 const formDataDefault = reactive({
   time: '',
-  team_id: '',
-  if_personal: '',
-  award_code: '',
+  old_team_id: '',
+  new_team_id: '',
+  price: '',
+  transfer_type: '',
   id: null,
   player_id: null
 })
 
-// 过滤奖项名称
-const filterAwardName = (name) => {
-  let result = null
-  if (props.awardList.length !== 0) {
-    result = props.awardList.find((item) => item.code === name)
-    return result.name
-  }
-  return ''
-}
+// 转会类型
+const transferType = computed(() => store.getters.transferType)
 
 onMounted(() => {
   searchData.id = props.playerId
@@ -167,8 +156,9 @@ const {
   handleSelectionChange,
   multipleSelectionHandler,
   handleCreate,
-  handleUpdate
-} = useBaseHooks({ reqFn: getPlayerHonor, searchData, formDataDefault })
+  handleUpdate,
+  filterDict
+} = useBaseHooks({ reqFn: getPlayerTransfer, searchData, formDataDefault })
 
 // 新增/编辑表单提交
 const handleSubmit = () => {
@@ -177,6 +167,7 @@ const handleSubmit = () => {
     getTableList()
   })
 }
+
 </script>
 
 <style lang='scss' scoped>
