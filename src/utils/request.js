@@ -43,6 +43,7 @@ service.interceptors.response.use(
         message: 'token已过期，请重新登录'
       })
       router.push('/login')
+      store.commit('user/SET_TOKEN', '')
       // return Promise.reject(error)
     }
     ElMessage({

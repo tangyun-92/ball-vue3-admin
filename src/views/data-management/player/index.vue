@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-09-26 17:31:49
+ * @Last Modified time: 2021-09-27 09:10:14
  球员管理
  */
 
@@ -231,6 +231,11 @@
                 size="small"
                 @click="handleTransfer(scope.row)"
               >转会记录</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="handleInjury(scope.row)"
+              >伤病记录</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -384,6 +389,26 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 伤病记录 -->
+    <el-dialog
+      v-if="playerInjuryDialogVisible"
+      v-model="playerInjuryDialogVisible"
+      title="伤病记录"
+      width="1200px"
+    >
+      <InjuryTable
+        :player-id="playerId"
+        :team-list="teamList"
+      />
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
+            size="small"
+            @click="playerInjuryDialogVisible = false"
+          >关 闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -399,6 +424,7 @@ import AbilityForm from './components/AbilitiesForm.vue'
 import HistoryDataForm from './history-data/HistoryDataTable.vue'
 import HonorTable from './honor-data/HonorTable.vue'
 import TransferTable from './transfer-data/TransferTable.vue'
+import InjuryTable from './injury-data/InjuryTable.vue'
 
 const store = useStore()
 
@@ -554,6 +580,15 @@ const handleHonor = (row) => {
 const playerTransferDialogVisible = ref(false)
 const handleTransfer = (row) => {
   playerTransferDialogVisible.value = true
+  playerId.value = row.id
+}
+
+/**
+ * 伤病记录弹窗
+ */
+const playerInjuryDialogVisible = ref(false)
+const handleInjury = (row) => {
+  playerInjuryDialogVisible.value = true
   playerId.value = row.id
 }
 
