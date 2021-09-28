@@ -39,13 +39,13 @@ export default function ({ reqFn, searchData, formDataDefault }) {
     data.loading = true
     if (reqFn) {
       const res = await reqFn({
-        page: data.currentPage,
+        currentPage: data.currentPage,
         pageSize: data.pageSize,
         ...searchData
       })
       data.tableData = res.data.records
       data.total = res.data.total
-      data.currentPage = res.data.page
+      data.currentPage = res.data.currentPage
       data.loading = false
     }
   }

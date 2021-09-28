@@ -60,9 +60,15 @@ export const constantRoutes = [
         children: [
           {
             path: '/data-management/player',
-            name: 'PlayerInfo',
+            name: 'Player',
             component: () => import('@/views/data-management/player/index.vue'),
             meta: { title: '球员管理', icon: 'el-icon-position' }
+          },
+          {
+            path: '/data-management/team',
+            name: 'Team',
+            component: () => import('@/views/data-management/team/index.vue'),
+            meta: { title: '球队管理', icon: 'el-icon-position' }
           }
         ]
       }
