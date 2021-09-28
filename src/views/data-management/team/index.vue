@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-09-28 09:35:19
+ * @Last Modified time: 2021-09-28 09:41:01
  球员管理
  */
 
@@ -81,7 +81,11 @@
           <el-table-column prop="email" label="邮箱" width="250"></el-table-column>
           <el-table-column prop="address" label="地址" width="280"></el-table-column>
           <el-table-column prop="world_ranking" label="世界排名"></el-table-column>
-          <el-table-column prop="total_value" label="总身价"></el-table-column>
+          <el-table-column prop="total_value" label="总身价" width="100">
+            <template #default="scope">
+              {{ scope.row.total_value }}<span v-if="scope.row.total_value">万欧</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="team_logo" label="队徽" width="120">
             <template #default="scope">
               <img v-if="scope.row.team_logo" style="width:40px; height:40px;" :src="scope.row.team_logo" alt="">
