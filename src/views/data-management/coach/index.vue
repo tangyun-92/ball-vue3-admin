@@ -2,8 +2,8 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-09-28 11:02:58
- 球员管理
+ * @Last Modified time: 2021-09-28 10:50:33
+ 教练管理
  */
 
 <template>
@@ -11,7 +11,7 @@
     <!-- 搜索 -->
     <div class="search-container">
       <el-form ref="form" :model="searchData" label-width="100px" size="small">
-        <el-form-item label="球队名">
+        <el-form-item label="姓名">
           <el-input
             v-model="searchData.name"
             clearable
@@ -26,6 +26,40 @@
             placeholder="请输入"
             @keydown.enter="getTableList"
           ></el-input>
+        </el-form-item>
+        <el-form-item label="球队" prop="team_id">
+          <el-select
+            v-model="searchData.team_id"
+            placeholder="请选择"
+            clearable
+            filterable
+            @change="getTableList"
+          >
+            <el-option
+              v-for="item in teamList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="国家" prop="nation_id">
+          <el-select
+            v-model="searchData.nation_id"
+            placeholder="请选择"
+            clearable
+            filterable
+            @change="getTableList"
+          >
+            <el-option
+              v-for="item in nationList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <el-button
@@ -51,7 +85,7 @@
           @click="
             multipleSelectionHandler({
               operation: '删除',
-              reqFn: delTeam,
+              reqFn: delCoach,
               data: {
                 id: selectIds
               }
@@ -68,29 +102,20 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55"> </el-table-column>
-          <el-table-column prop="team_logo" label="队徽" width="80">
+          <el-table-column prop="avatar" label="队徽" width="80">
             <template #default="scope">
-              <img v-if="scope.row.team_logo" style="width:40px; height:40px;" :src="scope.row.team_logo" alt="">
+              <img v-if="scope.row.avatar" style="width:40px; height:40px;" :src="scope.row.avatar" alt="">
             </template>
           </el-table-column>
-          <el-table-column prop="name" label="球队名称" width="150">
+          <el-table-column prop="name" label="教练名" width="150">
           </el-table-column>
           <el-table-column prop="english_name" label="英文名" width="180">
           </el-table-column>
-          <el-table-column prop="setup_time" label="成立时间"> </el-table-column>
-          <el-table-column prop="area" label="所在地区" width="100"></el-table-column>
-          <el-table-column prop="city" label="城市" width="100"></el-table-column>
-          <el-table-column prop="home_court" label="球队主场" width="200"></el-table-column>
-          <el-table-column prop="person_num" label="容纳人数"></el-table-column>
-          <el-table-column prop="tel" label="电话" width="180"></el-table-column>
-          <el-table-column prop="email" label="邮箱" width="250"></el-table-column>
-          <el-table-column prop="address" label="地址" width="280"></el-table-column>
-          <el-table-column prop="world_ranking" label="世界排名"></el-table-column>
-          <el-table-column prop="total_value" label="总身价" width="100">
-            <template #default="scope">
-              {{ scope.row.total_value }}<span v-if="scope.row.total_value">万欧</span>
-            </template>
-          </el-table-column>
+          <el-table-column prop="team" label="球队"> </el-table-column>
+          <el-table-column prop="nation" label="国籍"></el-table-column>
+          <el-table-column prop="birthday" label="生日" width="120"></el-table-column>
+          <el-table-column prop="age" label="年龄"></el-table-column>
+          <el-table-column prop="contract_expire" label="合同到期" width="120"></el-table-column>
           <el-table-column fixed="right" label="操作" width="240">
             <template #default="scope">
               <el-button
@@ -104,7 +129,7 @@
                 @click="
                   multipleSelectionHandler({
                     operation: '删除',
-                    reqFn: delTeam,
+                    reqFn: delCoach,
                     data: {
                       id: String(scope.row.id).split(' ')
                     },
@@ -115,8 +140,8 @@
               <el-button
                 type="text"
                 size="small"
-                @click="handlePlayerData(scope.row)"
-              >历史数据</el-button>
+                @click="handlePlayerExperience(scope.row)"
+              >执教经历</el-button>
               <el-button
                 type="text"
                 size="small"
@@ -139,7 +164,7 @@
       @current-change="handleCurrentChange"
     >
     </el-pagination>
-    <!-- 新增/编辑球员 -->
+    <!-- 新增/编辑教练 -->
     <el-dialog
       v-if="data.formDialogVisible"
       v-model="data.formDialogVisible"
@@ -151,6 +176,8 @@
           ref="formRef"
           :status="data.dialogStatus"
           :data="data.formData"
+          :nation="nationList"
+          :team="teamList"
         ></Form>
       </div>
       <template #footer>
@@ -167,39 +194,44 @@
         </span>
       </template>
     </el-dialog>
-    <!-- 历史数据 -->
+    <!-- 执教经历 -->
     <el-dialog
-      v-if="teamDataDialogVisible"
-      v-model="teamDataDialogVisible"
-      title="历史数据"
+      v-if="coachExperienceDialogVisible"
+      v-model="coachExperienceDialogVisible"
+      title="执教经历"
       width="1200px"
     >
-      <HistoryDataForm :team-id="teamId" />
+      <ExperienceTable
+        :coach-id="coachId"
+        :award-list="awardList"
+        :team-list="teamList"
+      />
       <template #footer>
         <span class="dialog-footer">
           <el-button
             size="small"
-            @click="teamDataDialogVisible = false"
+            @click="coachExperienceDialogVisible = false"
           >关 闭</el-button>
         </span>
       </template>
     </el-dialog>
     <!-- 荣誉记录 -->
     <el-dialog
-      v-if="teamHonorDialogVisible"
-      v-model="teamHonorDialogVisible"
+      v-if="coachHonorDialogVisible"
+      v-model="coachHonorDialogVisible"
       title="荣誉记录"
       width="1200px"
     >
       <HonorTable
-        :team-id="teamId"
+        :coach-id="coachId"
         :award-list="awardList"
+        :team-list="teamList"
       />
       <template #footer>
         <span class="dialog-footer">
           <el-button
             size="small"
-            @click="teamHonorDialogVisible = false"
+            @click="coachHonorDialogVisible = false"
           >关 闭</el-button>
         </span>
       </template>
@@ -208,13 +240,13 @@
 </template>
 
 <script setup>
-import { getTeamList, delTeam } from '@/api/data-management/team'
+import { getCoachList, delCoach } from '@/api/data-management/coach'
 import { getAward, getNation, getTeam } from '@/api/public'
 import useBaseHooks from '@/hooks/useBaseHooks'
 import { computed, defineComponent, onMounted, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import Form from './components/Form.vue'
-import HistoryDataForm from './history-data/HistoryDataTable.vue'
+import ExperienceTable from './experience-data/ExperienceTable.vue'
 import HonorTable from './honor-data/HonorTable.vue'
 
 const store = useStore()
@@ -228,21 +260,16 @@ const searchData = reactive({
 const formDataDefault = reactive({
   name: '',
   english_name: '',
-  setup_time: '',
-  area: '',
-  city: '',
-  home_court: '',
-  person_num: '',
-  tel: '',
-  email: '',
-  address: '',
-  world_ranking: '',
-  total_value: '',
-  team_logo: '',
+  team_id: '',
+  nation_id: '',
+  birthday: '',
+  age: '',
+  contract_expire: '',
+  avatar: '',
   id: null
 })
-// 球队id
-const teamId = ref('')
+// 教练id
+const coachId = ref('')
 
 /**
  * vuex
@@ -266,14 +293,28 @@ const {
   multipleSelectionHandler,
   selectIds,
   filterDict
-} = useBaseHooks({ reqFn: getTeamList, searchData, formDataDefault })
+} = useBaseHooks({ reqFn: getCoachList, searchData, formDataDefault })
 
 /**
  * 初始化请求
  */
 onMounted(() => {
+  getTeamList()
+  getNationList()
   getAwardList()
 })
+// 球队列表
+const teamList = ref([])
+const getTeamList = async () => {
+  const res = await getTeam()
+  teamList.value = res.data.records
+}
+// 国家列表
+const nationList = ref([])
+const getNationList = async () => {
+  const res = await getNation()
+  nationList.value = res.data.records
+}
 // 奖项列表
 const awardList = ref([])
 const getAwardList = async () => {
@@ -293,21 +334,21 @@ const handleSubmit = () => {
 }
 
 /**
- * 历史数据弹窗
+ * 执教经历弹窗
  */
-const teamDataDialogVisible = ref(false)
-const handlePlayerData = (row) => {
-  teamDataDialogVisible.value = true
-  teamId.value = row.id
+const coachExperienceDialogVisible = ref(false)
+const handlePlayerExperience = (row) => {
+  coachExperienceDialogVisible.value = true
+  coachId.value = row.id
 }
 
 /**
  * 荣誉记录弹窗
  */
-const teamHonorDialogVisible = ref(false)
+const coachHonorDialogVisible = ref(false)
 const handleHonor = (row) => {
-  teamHonorDialogVisible.value = true
-  teamId.value = row.id
+  coachHonorDialogVisible.value = true
+  coachId.value = row.id
 }
 
 </script>

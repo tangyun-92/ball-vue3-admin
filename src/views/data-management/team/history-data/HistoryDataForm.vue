@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-29 10:37:09
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-09-28 09:17:45
+ * @Last Modified time: 2021-09-28 11:03:44
  历史数据Form
  */
 <template>
@@ -255,7 +255,7 @@ const submit = () => {
       if (valid) {
         const res = await updateTeamData({
           ...formData,
-          player_id: props.id
+          team_id: props.id
         })
         ElMessage.success(res.message)
         resolve(res)

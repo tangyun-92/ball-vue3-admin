@@ -59,16 +59,22 @@ export const constantRoutes = [
         redirect: '/data-management/player',
         children: [
           {
+            path: '/data-management/team',
+            name: 'Team',
+            component: () => import('@/views/data-management/team/index.vue'),
+            meta: { title: '球队管理', icon: 'el-icon-position' }
+          },
+          {
             path: '/data-management/player',
             name: 'Player',
             component: () => import('@/views/data-management/player/index.vue'),
             meta: { title: '球员管理', icon: 'el-icon-position' }
           },
           {
-            path: '/data-management/team',
-            name: 'Team',
-            component: () => import('@/views/data-management/team/index.vue'),
-            meta: { title: '球队管理', icon: 'el-icon-position' }
+            path: '/data-management/coach',
+            name: 'Coach',
+            component: () => import('@/views/data-management/coach/index.vue'),
+            meta: { title: '教练管理', icon: 'el-icon-position' }
           }
         ]
       }

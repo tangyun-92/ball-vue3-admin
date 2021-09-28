@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-09-27 09:10:14
+ * @Last Modified time: 2021-09-28 10:23:03
  球员管理
  */
 
@@ -119,6 +119,11 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55"> </el-table-column>
+          <el-table-column prop="avatar" label="队徽" width="80">
+            <template #default="scope">
+              <img v-if="scope.row.avatar" style="width:40px; height:40px;" :src="scope.row.avatar" alt="">
+            </template>
+          </el-table-column>
           <el-table-column prop="name" label="姓名" width="150">
           </el-table-column>
           <el-table-column prop="english_name" label="英文名" width="150">
